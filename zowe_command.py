@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------------
-# streamlit run main.py
+# streamlit run zowe_command.py
 #------------------- IMPORTS ------------------------------------------------
 import streamlit as st
 import json
@@ -58,7 +58,7 @@ if "submit_button_disabled" not in st.session_state: # Submit command button sta
 if not st.session_state.create_file:
     st.session_state.create_file=True 
     with st.spinner("Processing..."):
-        sto, ste, rc = execute_command('zowe --ac --rfj > ./zowe_command_builder/zowe.json')
+        sto, ste, rc = execute_command('zowe --ac --rfj > ./zowe.json')
 #----------------------------------------------------------------------------
 
 #------------------- RUNS ONLY FIRST TIME OR RESET --------------------------
@@ -67,7 +67,7 @@ if not st.session_state.create_file:
 if not st.session_state.reset:
     st.session_state.reset=True 
     #- Read zowe.json' file:
-    with open('./zowe_command_builder/zowe.json', 'r') as file:
+    with open('./zowe.json', 'r') as file:
         st.session_state.zowe_dict = json.load(file)
     st.session_state.zowe_dict = st.session_state.zowe_dict['data']
 

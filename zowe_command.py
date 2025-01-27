@@ -181,7 +181,7 @@ if submit_button:
 
 
 #------------------- FORM START TO SELECT OPTIONS ---------------------------
-with st.form("unterse"):
+with st.form("Create_Command"):
 
     #- Create button
     create_button=st.form_submit_button("Create Command",

@@ -90,6 +90,8 @@ def list_children(actions):
 #------------------- CREATE WIDGETS -----------------------------------------
 def create_widgets(group,value):
     options_dict={}
+    text_types=["string", "number", "existingLocalFile", "array", "stringOrEmpty"]
+
     for item in st.session_state.zowe_dict[f'{group}']:
 
         if group != 'positionals':
@@ -99,6 +101,7 @@ def create_widgets(group,value):
 
         options_dict[f'{item["name"]}'] = item["type"]
         desc = f'{item["name"]} - {item["description"]}'
+        desc = remove_ansi_codes(desc)
 
         if "required" in item:
             if item["required"]:
@@ -106,9 +109,12 @@ def create_widgets(group,value):
         
         if item["type"]=="boolean":
             st.toggle(f'{desc}',key=item["name"])
-                    
-        if item["type"]=="string" or item["type"]=="number" or item["type"]=="existingLocalFile":
-            st.text_input(f'{desc}',key=item["name"])
+
+        if item["type"] in text_types:
+            if item["name"]=="password":
+                st.text_input(f'{desc}',key=item["name"],type="password")
+            else:
+                st.text_input(f'{desc}',key=item["name"])
 
     return options_dict
 #----------------------------------------------------------------------------
@@ -190,6 +196,7 @@ with st.form("Create_Command"):
 
 
     if st.session_state.zowe_dict["type"] == "command":
+        text_types=["string", "number", "existingLocalFile", "array", "stringOrEmpty", ""]
         st.session_state.zowe_options_command=''
         
         def set_options(group,value):
@@ -202,9 +209,9 @@ with st.form("Create_Command"):
                     st.session_state.zowe_options_command=f'{st.session_state.zowe_options_command} {st.session_state.get(name)}'
                 elif type=="boolean" and st.session_state.get(name) == True :
                     st.session_state.zowe_options_command=f'{st.session_state.zowe_options_command} --{name}'
-                elif (type=="string" or type=="number" or type=="existingLocalFile") and st.session_state.get(name) != '':
+                elif (type in text_types) and st.session_state.get(name) != '':
                     st.session_state.zowe_options_command=f'{st.session_state.zowe_options_command} --{name} {st.session_state.get(name)}'
-                elif type not in "boolean, string, number, existingLocalFile, ''": 
+                elif type not in text_types and type!="boolean": 
                     st.write(f'Name {name} Type {type} Not available')
 
 

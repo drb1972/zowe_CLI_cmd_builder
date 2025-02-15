@@ -83,7 +83,7 @@ if not st.session_state.reset:
 def list_children(actions):
     for name in st.session_state.zowe_dict["children"]:
         actions.append(name["name"])
-    return actions
+    return actions.sort()
 #----------------------------------------------------------------------------
 
 
